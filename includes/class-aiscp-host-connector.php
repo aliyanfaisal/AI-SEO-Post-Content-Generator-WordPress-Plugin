@@ -104,9 +104,45 @@ class AISCP_Host_Connector {
 			}
 		}
 
+		// Step 1: Download all inline images (image_2, image_3...) before inserting post
+		$inline_attachment_ids = array();
+		$image_urls = $post_data['image_urls'] ?? array();
+		foreach ( $image_urls as $index => $url ) {
+			if ( (int) $index === 1 ) continue; // image_1 = featured, handled separately
+			if ( empty( $url ) ) continue;
+			$attach_id = self::sideload_image( $url, 0, $post_data['title'] ?? '' );
+			if ( $attach_id && ! is_wp_error( $attach_id ) ) {
+				$inline_attachment_ids[ (int) $index ] = $attach_id;
+			}
+		}
+
+		// Step 2: Replace {{IMAGE_N}} placeholders in content with WordPress image block HTML
+		$post_content = $post_data['content'] ?? '';
+		foreach ( $inline_attachment_ids as $index => $attach_id ) {
+			$img_url = wp_get_attachment_url( $attach_id );
+			$img_alt = sanitize_text_field( $post_data['title'] ?? '' );
+
+			// Gutenberg block format (also renders correctly in Classic Editor)
+			$block  = "
+<!-- wp:image {"id":{$attach_id},"sizeSlug":"large","linkDestination":"none"} -->
+";
+			$block .= '<figure class="wp-block-image size-large">';
+			$block .= '<img src="' . esc_url( $img_url ) . '" alt="' . esc_attr( $img_alt ) . '" class="wp-image-' . $attach_id . '"/>';
+			$block .= "</figure>
+";
+			$block .= "<!-- /wp:image -->
+";
+
+			$post_content = str_replace( '{{IMAGE_' . $index . '}}', $block, $post_content );
+		}
+
+		// Remove any unresolved placeholders (failed downloads)
+		$post_content = preg_replace( '/\{\{IMAGE_\d+\}\}/', '', $post_content );
+
+		// Step 3: Insert the post with processed content
 		$post_id = wp_insert_post( array(
 			'post_title'    => sanitize_text_field( $post_data['title'] ),
-			'post_content'  => wp_kses_post( $post_data['content'] ),
+			'post_content'  => wp_kses_post( $post_content ),
 			'post_excerpt'  => isset( $post_data['excerpt'] ) ? sanitize_textarea_field( $post_data['excerpt'] ) : '',
 			'post_status'   => $post_status,
 			'post_author'   => 1,
@@ -115,14 +151,20 @@ class AISCP_Host_Connector {
 
 		if ( is_wp_error( $post_id ) ) return $post_id;
 
+		// Update inline image attachment parent to this post
+		foreach ( $inline_attachment_ids as $attach_id ) {
+			wp_update_post( array( 'ID' => $attach_id, 'post_parent' => $post_id ) );
+		}
+
 		// Tags
 		if ( ! empty( $post_data['tags'] ) && is_array( $post_data['tags'] ) ) {
 			wp_set_post_tags( $post_id, $post_data['tags'], false );
 		}
 
-		// Thumbnail
-		if ( ! empty( $post_data['thumbnail_url'] ) && get_option( 'aiscp_enable_thumbnails', '1' ) === '1' ) {
-			self::attach_thumbnail_from_url( $post_id, $post_data['thumbnail_url'], $post_data['title'] );
+		// Featured image — image_1 from image_urls, or thumbnail_url
+		$featured_url = $image_urls[1] ?? $post_data['thumbnail_url'] ?? '';
+		if ( ! empty( $featured_url ) && get_option( 'aiscp_enable_thumbnails', '1' ) === '1' ) {
+			self::attach_thumbnail_from_url( $post_id, $featured_url, $post_data['title'] ?? '' );
 		}
 
 		// SEO meta — save to all supported SEO plugins
@@ -138,24 +180,37 @@ class AISCP_Host_Connector {
 		return $post_id;
 	}
 
+	/**
+	 * Download a remote image, add to media library, set as post featured image.
+	 */
 	private static function attach_thumbnail_from_url( $post_id, $url, $title = '' ) {
+		$attach_id = self::sideload_image( $url, $post_id, $title );
+		if ( $attach_id && ! is_wp_error( $attach_id ) ) {
+			set_post_thumbnail( $post_id, $attach_id );
+		}
+	}
+
+	/**
+	 * Download a remote image into the WP media library.
+	 *
+	 * @return int|WP_Error  Attachment ID on success.
+	 */
+	private static function sideload_image( $url, $post_id = 0, $title = '' ) {
 		require_once ABSPATH . 'wp-admin/includes/image.php';
 		require_once ABSPATH . 'wp-admin/includes/file.php';
 		require_once ABSPATH . 'wp-admin/includes/media.php';
 
-		$tmp = download_url( $url );
-		if ( is_wp_error( $tmp ) ) return;
+		$tmp = download_url( esc_url_raw( $url ) );
+		if ( is_wp_error( $tmp ) ) return $tmp;
 
-		$file_array = array(
-			'name'     => sanitize_file_name( basename( parse_url( $url, PHP_URL_PATH ) ) ?: 'ai-image.jpg' ),
-			'tmp_name' => $tmp,
-		);
+		$ext        = pathinfo( parse_url( $url, PHP_URL_PATH ), PATHINFO_EXTENSION ) ?: 'jpg';
+		$filename   = sanitize_file_name( 'ai-image-' . time() . '.' . $ext );
+		$file_array = array( 'name' => $filename, 'tmp_name' => $tmp );
 
-		$attach_id = media_handle_sideload( $file_array, $post_id, sanitize_text_field( $title ) );
-		if ( ! is_wp_error( $attach_id ) ) {
-			set_post_thumbnail( $post_id, $attach_id );
-		}
+		$attach_id = media_handle_sideload( $file_array, (int) $post_id, sanitize_text_field( $title ) );
 		@unlink( $tmp );
+
+		return $attach_id;
 	}
 
 	private static function parse_response( $response ) {
