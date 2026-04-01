@@ -10,7 +10,7 @@ class AISCP_Settings {
 	public static function save( $data ) {
 		$fields = array(
 			'target_keywords', 'negative_keywords', 'writing_style', 'tone',
-			'tone_examples', 'competitor_domains', 'publish_mode',
+			'tone_examples', 'content_restrictions', 'competitor_domains', 'publish_mode',
 			'enable_thumbnails', 'enable_stock_images', 'internal_links',
 			'sitemap_url', 'content_language', 'ai_model', 'posts_per_month',
 			'auto_categorize', 'fact_checking',

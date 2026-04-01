@@ -111,10 +111,20 @@
 						</div>
 					</div>
 
-					<div class="aiscp-field">
-						<label for="tone_examples"><?php _e( 'Tone & Voice Examples', 'ai-seo-content-plugin' ); ?></label>
-						<textarea id="tone_examples" name="tone_examples" rows="6" placeholder="<?php esc_attr_e( 'Paste 1-3 example paragraphs that represent your brand voice. The AI will match this style when generating content.', 'ai-seo-content-plugin' ); ?>"><?php echo esc_textarea( AISCP_Settings::get( 'tone_examples' ) ); ?></textarea>
-						<span class="aiscp-field-hint"><?php _e( 'Provide examples of your business voice to help AI match your tone precisely.', 'ai-seo-content-plugin' ); ?></span>
+					<div class="aiscp-field-row">
+						<div class="aiscp-field">
+							<label for="tone_examples"><?php _e( 'Tone & Voice Examples', 'ai-seo-content-plugin' ); ?></label>
+							<textarea id="tone_examples" name="tone_examples" rows="6" placeholder="<?php esc_attr_e( 'Paste 1-3 example paragraphs that represent your brand voice. The AI will match this style when generating content.', 'ai-seo-content-plugin' ); ?>"><?php echo esc_textarea( AISCP_Settings::get( 'tone_examples' ) ); ?></textarea>
+							<span class="aiscp-field-hint"><?php _e( 'Provide writing samples so the AI can replicate your exact brand voice.', 'ai-seo-content-plugin' ); ?></span>
+						</div>
+						<div class="aiscp-field">
+							<label for="content_restrictions"><?php _e( 'Content Restrictions', 'ai-seo-content-plugin' ); ?></label>
+							<textarea id="content_restrictions" name="content_restrictions" rows="6" placeholder="<?php esc_attr_e( "Do not mention competitor products or brand names.
+Avoid making specific pricing claims.
+Do not include medical or legal advice.
+Never use aggressive sales language.", 'ai-seo-content-plugin' ); ?>"><?php echo esc_textarea( AISCP_Settings::get( 'content_restrictions' ) ); ?></textarea>
+							<span class="aiscp-field-hint"><?php _e( 'Specify topics, phrases, claims, or content types the AI must never include in any generated post.', 'ai-seo-content-plugin' ); ?></span>
+						</div>
 					</div>
 				</div>
 			</div>
