@@ -124,15 +124,11 @@ class AISCP_Host_Connector {
 			$img_alt = sanitize_text_field( $post_data['title'] ?? '' );
 
 			// Gutenberg block format (also renders correctly in Classic Editor)
-			$block  = "
-<!-- wp:image {"id":{$attach_id},"sizeSlug":"large","linkDestination":"none"} -->
-";
+			$block  = "\n" . '<!-- wp:image {"id":' . $attach_id . ',"sizeSlug":"large","linkDestination":"none"} -->' . "\n";
 			$block .= '<figure class="wp-block-image size-large">';
 			$block .= '<img src="' . esc_url( $img_url ) . '" alt="' . esc_attr( $img_alt ) . '" class="wp-image-' . $attach_id . '"/>';
-			$block .= "</figure>
-";
-			$block .= "<!-- /wp:image -->
-";
+			$block .= '</figure>' . "\n";
+			$block .= '<!-- /wp:image -->' . "\n";
 
 			$post_content = str_replace( '{{IMAGE_' . $index . '}}', $block, $post_content );
 		}
