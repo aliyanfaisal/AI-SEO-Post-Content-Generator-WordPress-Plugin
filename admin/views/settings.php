@@ -206,6 +206,52 @@ Never use aggressive sales language.", 'ai-seo-content-plugin' ); ?>"><?php echo
 				</div>
 			</div>
 
+			<!-- Section: Reference Posts -->
+			<div class="aiscp-card">
+				<div class="aiscp-card-header">
+					<div>
+						<h2><?php _e( 'Reference Post Links', 'ai-seo-content-plugin' ); ?></h2>
+					</div>
+				</div>
+				<div class="aiscp-card-body">
+					<div class="aiscp-toggle-row" style="margin-bottom:20px;">
+						<div class="toggle-row-info">
+							<strong><?php _e( 'Create Content from Reference Post Links', 'ai-seo-content-plugin' ); ?></strong>
+							<span><?php _e( 'When enabled, the AI will use content from the provided URLs as reference material.', 'ai-seo-content-plugin' ); ?></span>
+						</div>
+						<div class="aiscp-toggle">
+							<input type="checkbox" id="use_reference_posts" name="use_reference_posts" value="1" <?php checked( AISCP_Settings::get( 'use_reference_posts', '0' ), '1' ); ?>>
+							<span class="toggle-slider"></span>
+						</div>
+					</div>
+					<div id="aiscp-reference-posts-fields" style="<?php echo AISCP_Settings::get( 'use_reference_posts', '0' ) === '1' ? '' : 'display:none;'; ?>">
+						<div class="aiscp-field" style="margin-bottom:20px;">
+							<label for="reference_posts_prompt"><?php _e( 'Reference Instruction', 'ai-seo-content-plugin' ); ?></label>
+							<textarea id="reference_posts_prompt" name="reference_posts_prompt" rows="3"
+								placeholder="<?php esc_attr_e( 'e.g. Use these posts as reference material to write a new improved version covering the same topics with updated information and better structure.', 'ai-seo-content-plugin' ); ?>"
+							><?php echo esc_textarea( AISCP_Settings::get( 'reference_posts_prompt', '' ) ); ?></textarea>
+							<span class="aiscp-field-hint"><?php _e( 'This instruction will be injected at the top of every generation prompt with highest priority.', 'ai-seo-content-plugin' ); ?></span>
+						</div>
+						<div class="aiscp-field">
+							<label><?php _e( 'Reference Post URLs', 'ai-seo-content-plugin' ); ?></label>
+							<div id="aiscp-reference-urls-repeater">
+								<?php
+								$ref_urls = AISCP_Settings::get_reference_urls();
+								if ( empty( $ref_urls ) ) $ref_urls = array( '' );
+								foreach ( $ref_urls as $i => $url ) :
+								?>
+								<div class="aiscp-ref-url-row">
+									<input type="url" name="reference_urls[]" value="<?php echo esc_attr( $url ); ?>" placeholder="https://example.com/post-to-reference">
+									<button type="button" class="aiscp-remove-ref-url" title="Remove">&times;</button>
+								</div>
+								<?php endforeach; ?>
+							</div>
+							<button type="button" id="aiscp-add-ref-url" class="aiscp-btn aiscp-btn-ghost" style="margin-top:10px;">+ <?php _e( 'Add URL', 'ai-seo-content-plugin' ); ?></button>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<!-- Save Button -->
 			<div class="aiscp-form-footer">
 				<button type="submit" id="aiscp-save-btn" class="aiscp-btn aiscp-btn-primary">

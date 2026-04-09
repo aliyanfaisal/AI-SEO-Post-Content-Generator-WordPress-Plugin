@@ -1131,3 +1131,41 @@
 .aiscp-btn-danger-outline:hover {
 	background: var(--aiscp-danger-light);
 }
+
+/* =====================
+   Reference URL Repeater
+   ===================== */
+.aiscp-ref-url-row {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	margin-bottom: 8px;
+}
+
+.aiscp-ref-url-row input[type="url"] {
+	flex: 1;
+}
+
+.aiscp-remove-ref-url {
+	width: 32px;
+	height: 36px;
+	background: transparent;
+	border: 1.5px solid var(--aiscp-border);
+	border-radius: var(--aiscp-radius-sm);
+	color: var(--aiscp-text-muted);
+	font-size: 16px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	transition: all .15s;
+	padding: 0;
+	line-height: 1;
+}
+
+.aiscp-remove-ref-url:hover {
+	background: var(--aiscp-danger-light);
+	border-color: var(--aiscp-danger);
+	color: var(--aiscp-danger);
+}

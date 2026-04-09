@@ -272,6 +272,39 @@
 			});
 		});
 
+		// =====================
+		// Reference Posts Toggle
+		// =====================
+		$('#use_reference_posts').on('change', function () {
+			if ($(this).is(':checked')) {
+				$('#aiscp-reference-posts-fields').slideDown(200);
+			} else {
+				$('#aiscp-reference-posts-fields').slideUp(200);
+			}
+		});
+
+		// Add reference URL row
+		$('#aiscp-add-ref-url').on('click', function () {
+			var $row = $(
+				'<div class="aiscp-ref-url-row">' +
+					'<input type="url" name="reference_urls[]" placeholder="https://example.com/post-to-reference">' +
+					'<button type="button" class="aiscp-remove-ref-url" title="Remove">&times;</button>' +
+				'</div>'
+			);
+			$('#aiscp-reference-urls-repeater').append($row);
+			$row.find('input').focus();
+		});
+
+		// Remove reference URL row
+		$(document).on('click', '.aiscp-remove-ref-url', function () {
+			var total = $('#aiscp-reference-urls-repeater .aiscp-ref-url-row').length;
+			if (total <= 1) {
+				$(this).closest('.aiscp-ref-url-row').find('input').val('');
+				return;
+			}
+			$(this).closest('.aiscp-ref-url-row').remove();
+		});
+
 	}); // end document.ready
 
 })(jQuery);

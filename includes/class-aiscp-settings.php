@@ -3,6 +3,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class AISCP_Settings {
 
+	public static function get_reference_urls() {
+		$urls = get_option( 'aiscp_reference_urls', array() );
+		return is_array( $urls ) ? array_filter( array_map( 'trim', $urls ) ) : array();
+	}
+
 	public static function get( $key, $default = '' ) {
 		return get_option( 'aiscp_' . $key, $default );
 	}
@@ -10,7 +15,7 @@ class AISCP_Settings {
 	public static function save( $data ) {
 		$fields = array(
 			'target_keywords', 'negative_keywords', 'writing_style', 'tone',
-			'tone_examples', 'content_restrictions', 'competitor_domains', 'publish_mode',
+			'tone_examples', 'content_restrictions', 'competitor_domains', 'reference_posts_prompt', 'publish_mode',
 			'enable_thumbnails', 'enable_stock_images', 'internal_links',
 			'sitemap_url', 'content_language', 'ai_model', 'posts_per_month',
 			'auto_categorize', 'fact_checking',
@@ -23,7 +28,13 @@ class AISCP_Settings {
 		}
 
 		// Checkboxes (save 0 if not present)
-		$checkboxes = array( 'enable_thumbnails', 'enable_stock_images', 'auto_categorize', 'fact_checking' );
+		// Save reference URLs
+		if ( isset( $data['reference_urls'] ) && is_array( $data['reference_urls'] ) ) {
+			$urls = array_filter( array_map( 'sanitize_url', (array) $data['reference_urls'] ) );
+			update_option( 'aiscp_reference_urls', array_values( $urls ) );
+		}
+
+		$checkboxes = array( 'enable_thumbnails', 'enable_stock_images', 'auto_categorize', 'fact_checking', 'use_reference_posts' );
 		foreach ( $checkboxes as $cb ) {
 			update_option( 'aiscp_' . $cb, isset( $data[ $cb ] ) ? '1' : '0' );
 		}
