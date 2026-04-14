@@ -214,8 +214,8 @@ Never use aggressive sales language.", 'ai-seo-content-plugin' ); ?>"><?php echo
 					</div>
 				</div>
 				<div class="aiscp-card-body">
-					<div class="aiscp-toggle-row" style="margin-bottom:20px;">
-						<div class="toggle-row-info">
+					<label class="aiscp-toggle-label" style="margin-bottom:20px;">
+						<div class="toggle-info">
 							<strong><?php _e( 'Create Content from Reference Post Links', 'ai-seo-content-plugin' ); ?></strong>
 							<span><?php _e( 'When enabled, the AI will use content from the provided URLs as reference material.', 'ai-seo-content-plugin' ); ?></span>
 						</div>
@@ -223,7 +223,7 @@ Never use aggressive sales language.", 'ai-seo-content-plugin' ); ?>"><?php echo
 							<input type="checkbox" id="use_reference_posts" name="use_reference_posts" value="1" <?php checked( AISCP_Settings::get( 'use_reference_posts', '0' ), '1' ); ?>>
 							<span class="toggle-slider"></span>
 						</div>
-					</div>
+					</label>
 					<div id="aiscp-reference-posts-fields" style="<?php echo AISCP_Settings::get( 'use_reference_posts', '0' ) === '1' ? '' : 'display:none;'; ?>">
 						<div class="aiscp-field" style="margin-bottom:20px;">
 							<label for="reference_posts_prompt"><?php _e( 'Reference Instruction', 'ai-seo-content-plugin' ); ?></label>
@@ -248,6 +248,15 @@ Never use aggressive sales language.", 'ai-seo-content-plugin' ); ?>"><?php echo
 							</div>
 							<button type="button" id="aiscp-add-ref-url" class="aiscp-btn aiscp-btn-ghost" style="margin-top:10px;">+ <?php _e( 'Add URL', 'ai-seo-content-plugin' ); ?></button>
 						</div>
+					</div>
+					<!-- Generate Test Post -->
+					<div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--aiscp-border);">
+						<p style="font-size:13px;color:var(--aiscp-text-muted);margin:0 0 12px;"><?php _e( 'Test your current settings by generating a single post now.', 'ai-seo-content-plugin' ); ?></p>
+						<button type="button" id="aiscp-test-post-btn-settings" class="aiscp-btn aiscp-btn-primary">
+							<span class="btn-text">✨ <?php _e( 'Generate a Test Post', 'ai-seo-content-plugin' ); ?></span>
+							<span class="btn-spinner" style="display:none;">⏳</span>
+						</button>
+						<div id="aiscp-test-post-result-settings" style="display:none;margin-top:12px;"></div>
 					</div>
 				</div>
 			</div>

@@ -273,6 +273,40 @@
 		});
 
 		// =====================
+		// Generate Test Post (Settings Page)
+		// =====================
+		$('#aiscp-test-post-btn-settings').on('click', function () {
+			var $btn     = $(this);
+			var $text    = $btn.find('.btn-text');
+			var $spinner = $btn.find('.btn-spinner');
+			var $result  = $('#aiscp-test-post-result-settings');
+
+			$text.hide();
+			$spinner.show();
+			$btn.prop('disabled', true);
+			$result.hide();
+
+			$.post(AISCP.ajax_url, {
+				action: 'aiscp_test_post',
+				nonce:  AISCP.nonce,
+			}, function (res) {
+				$text.show();
+				$spinner.hide();
+				$btn.prop('disabled', false);
+				if (res.success) {
+					$result.removeClass('notice-error').addClass('notice-success aiscp-notice').html(res.data.message).show();
+				} else {
+					$result.removeClass('notice-success').addClass('notice-error aiscp-notice').text(res.data.message || AISCP.strings.error).show();
+				}
+			}).fail(function () {
+				$text.show();
+				$spinner.hide();
+				$btn.prop('disabled', false);
+				$result.removeClass('notice-success').addClass('notice-error aiscp-notice').text(AISCP.strings.error).show();
+			});
+		});
+
+		// =====================
 		// Reference Posts Toggle
 		// =====================
 		$('#use_reference_posts').on('change', function () {
