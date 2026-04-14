@@ -251,12 +251,11 @@ Never use aggressive sales language.", 'ai-seo-content-plugin' ); ?>"><?php echo
 					</div>
 					<!-- Generate Test Post -->
 					<div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--aiscp-border);">
-						<p style="font-size:13px;color:var(--aiscp-text-muted);margin:0 0 12px;"><?php _e( 'Test your current settings by generating a single post now.', 'ai-seo-content-plugin' ); ?></p>
-						<button type="button" id="aiscp-test-post-btn-settings" class="aiscp-btn aiscp-btn-primary">
-							<span class="btn-text">✨ <?php _e( 'Generate a Test Post', 'ai-seo-content-plugin' ); ?></span>
+						<button type="button" id="aiscp-generate-reference-post-btn" class="aiscp-btn aiscp-btn-primary">
+							<span class="btn-text">✨ <?php _e( 'Create a Post from References', 'ai-seo-content-plugin' ); ?></span>
 							<span class="btn-spinner" style="display:none;">⏳</span>
 						</button>
-						<div id="aiscp-test-post-result-settings" style="display:none;margin-top:12px;"></div>
+						<div id="aiscp-generate-reference-post-result" style="display:none;margin-top:12px;"></div>
 					</div>
 				</div>
 			</div>

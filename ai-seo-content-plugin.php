@@ -3,7 +3,7 @@
  * Plugin Name: AI SEO Content Plugin
  * Plugin URI:  https://aliyanfaisal.com
  * Description: AI-powered SEO blog post generator. Connects to the Jetben host plugin for AI generation.
- * Version:     1.0.7
+ * Version:     1.0.8
  * Author:      Aliyan Faisal
  * Author URI:  https://aliyanfaisal.com
  * Text Domain: ai-seo-content-plugin
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AISCP_VERSION',    '1.0.7' );
+define( 'AISCP_VERSION',    '1.0.8' );
 define( 'AISCP_PLUGIN_FILE', __FILE__ );
 define( 'AISCP_PLUGIN_DIR',  plugin_dir_path( __FILE__ ) );
 define( 'AISCP_PLUGIN_URL',  plugin_dir_url( __FILE__ ) );

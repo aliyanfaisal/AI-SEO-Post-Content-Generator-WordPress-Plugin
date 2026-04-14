@@ -273,13 +273,13 @@
 		});
 
 		// =====================
-		// Generate Test Post (Settings Page)
+		// Create Post from References
 		// =====================
-		$('#aiscp-test-post-btn-settings').on('click', function () {
+		$('#aiscp-generate-reference-post-btn').on('click', function () {
 			var $btn     = $(this);
 			var $text    = $btn.find('.btn-text');
 			var $spinner = $btn.find('.btn-spinner');
-			var $result  = $('#aiscp-test-post-result-settings');
+			var $result  = $('#aiscp-generate-reference-post-result');
 
 			$text.hide();
 			$spinner.show();
@@ -287,7 +287,7 @@
 			$result.hide();
 
 			$.post(AISCP.ajax_url, {
-				action: 'aiscp_test_post',
+				action: 'aiscp_generate_reference_post',
 				nonce:  AISCP.nonce,
 			}, function (res) {
 				$text.show();

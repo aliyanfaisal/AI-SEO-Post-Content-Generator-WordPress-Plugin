@@ -10,7 +10,8 @@ class AISCP_Admin {
 		add_action( 'wp_ajax_aiscp_validate_license', array( $this, 'ajax_validate_license' ) );
 		add_action( 'wp_ajax_aiscp_deactivate_license', array( $this, 'ajax_deactivate_license' ) );
 		add_action( 'wp_ajax_aiscp_test_post',  array( $this, 'ajax_test_post' ) );
-		add_action( 'wp_ajax_aiscp_clear_log',   array( $this, 'ajax_clear_log' ) );
+		add_action( 'wp_ajax_aiscp_clear_log',              array( $this, 'ajax_clear_log' ) );
+		add_action( 'wp_ajax_aiscp_generate_reference_post', array( $this, 'ajax_generate_reference_post' ) );
 	}
 
 	public function register_menus() {
@@ -154,6 +155,27 @@ class AISCP_Admin {
 
 		wp_send_json_success( array(
 			'message' => __( 'Generation job queued! The post will appear shortly in your <a href="edit.php" target="_blank">Posts list</a> once the host processes it.', 'ai-seo-content-plugin' ),
+			'job_id'  => $job_id,
+		) );
+	}
+
+	public function ajax_generate_reference_post() {
+		check_ajax_referer( 'aiscp_nonce', 'nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) wp_die( -1 );
+
+		$result = AISCP_Host_Connector::request_generate_post(
+			AISCP_Host_Connector::get_reference_preferences()
+		);
+
+		if ( ! $result['success'] ) {
+			wp_send_json_error( array( 'message' => $result['message'] ) );
+		}
+
+		$job_id = $result['data']['job_id'] ?? 'unknown';
+		AISCP_Cron::log( "[REFERENCE POST] Job queued from Reference Post Links. Job ID: {$job_id}" );
+
+		wp_send_json_success( array(
+			'message' => __( 'Reference post job queued! The post will appear shortly in your <a href="edit.php" target="_blank">Posts list</a>.', 'ai-seo-content-plugin' ),
 			'job_id'  => $job_id,
 		) );
 	}

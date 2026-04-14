@@ -35,9 +35,6 @@ class AISCP_Host_Connector {
 			'tone'                => get_option( 'aiscp_tone', 'informative' ),
 			'tone_examples'          => get_option( 'aiscp_tone_examples', '' ),
 			'content_restrictions'   => get_option( 'aiscp_content_restrictions', '' ),
-			'use_reference_posts'    => get_option( 'aiscp_use_reference_posts', '0' ),
-			'reference_posts_prompt' => get_option( 'aiscp_reference_posts_prompt', '' ),
-			'reference_urls'         => AISCP_Settings::get_reference_urls(),
 			'target_keywords'     => get_option( 'aiscp_target_keywords', '' ),
 			'negative_keywords'   => get_option( 'aiscp_negative_keywords', '' ),
 			'internal_links'      => get_option( 'aiscp_internal_links', '' ),
@@ -54,6 +51,31 @@ class AISCP_Host_Connector {
 	/**
 	 * Validate license with host plugin (domain-based).
 	 */
+	/**
+	 * Reference post generation preferences — excludes Keywords & Targeting fields.
+	 * Sends reference URLs, instruction, style/tone/language/publishing only.
+	 */
+	public static function get_reference_preferences() {
+		return array(
+			'domain'                 => home_url(),
+			'webhook_url'            => self::get_webhook_url(),
+			'reference_mode'         => true,
+			'ai_model'               => get_option( 'aiscp_ai_model', 'claude' ),
+			'content_language'       => get_option( 'aiscp_content_language', 'he' ),
+			'writing_style'          => get_option( 'aiscp_writing_style', 'professional' ),
+			'tone'                   => get_option( 'aiscp_tone', 'informative' ),
+			'tone_examples'          => get_option( 'aiscp_tone_examples', '' ),
+			'content_restrictions'   => get_option( 'aiscp_content_restrictions', '' ),
+			'publish_mode'           => get_option( 'aiscp_publish_mode', 'pending' ),
+			'enable_thumbnails'      => get_option( 'aiscp_enable_thumbnails', '1' ),
+			'enable_stock_images'    => get_option( 'aiscp_enable_stock_images', '1' ),
+			'auto_categorize'        => get_option( 'aiscp_auto_categorize', '1' ),
+			'use_reference_posts'    => '1',
+			'reference_posts_prompt' => get_option( 'aiscp_reference_posts_prompt', '' ),
+			'reference_urls'         => AISCP_Settings::get_reference_urls(),
+		);
+	}
+
 	public static function validate_license() {
 		$response = wp_remote_post( AISCP_LICENSE_API, array(
 			'timeout' => 15,
