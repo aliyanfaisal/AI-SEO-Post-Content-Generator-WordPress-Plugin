@@ -1,0 +1,11 @@
+.DS_Store
+.idea/
+.vscode/
+node_modules/
+vendor/
+composer.lock
+.phpunit.result.cache
+/build/
+/dist/
+*.zip
+*.log
