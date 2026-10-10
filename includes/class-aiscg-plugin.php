@@ -67,7 +67,10 @@ class AISCG_Plugin {
 				)
 			);
 		}
-		// Defaults, option migration and scheduling are added in later steps.
+		// Migrate first so legacy values win over fresh defaults.
+		AISCG_Migrator::run();
+		AISCG_Settings::ensure_defaults();
+		// Scheduling is added with the cron class in a later step.
 	}
 
 	public static function deactivate() {
