@@ -209,10 +209,20 @@ predictable.
 
 ## Roadmap
 
-**Retrieval over your own posts.** A future module will embed your existing posts and use them to
-ground new articles in your brand voice and facts, suggest internal links from related posts, and
-avoid overlapping topics. The groundwork (the context provider interface) is already part of the
-plugin. See [docs/rag-roadmap.md](docs/rag-roadmap.md).
+**Retrieval over your own posts (RAG): future development, not included in this version.**
+
+Version 2.0 does not embed, index or search your existing posts, and it sends none of your site's
+content to an embeddings service. The planned module would:
+
+- embed your existing posts incrementally when they are saved
+- ground new articles in your brand voice and facts
+- suggest internal links from related existing posts
+- avoid topic overlap and cannibalization between posts
+
+Only the extension point for it ships today: the `AISCG_Context_Provider` interface and the
+`aiscg_context_providers` filter, which the sitemap and reference-URL features already use. The
+design, including the privacy implications of sending post content to an embeddings provider, is
+written up in [docs/rag-roadmap.md](docs/rag-roadmap.md).
 
 ## Screenshots
 
